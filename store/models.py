@@ -50,7 +50,7 @@ class Order(models.Model):
     
     def get_cart_item(self):
         orderitems = self.orderitem_set.all()
-        total = sum([item.get_total for item in orderitems])
+        total = sum([item.quantity for item in orderitems])
         return total
     
 
