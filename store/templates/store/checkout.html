@@ -43,6 +43,7 @@
 			<br>
 			<div class="box-element hidden" id="payment-info">
 				<small>Paypal Options</small>
+				<button id ="make-button"> Make Payment</button>
 			</div>
 			
 		</div>
@@ -66,4 +67,94 @@
 			</div>
 		</div>
 	</div>
+
+	<script type = "text/javascript"> 
+			var shipping = '{{order.shipping}}'
+
+			var total = '{{order.get_cart_total|floatformat:2}}'
+			if(shipping == 'False'){
+				document.getElementById('shipping-info').innerHTML = ''
+			} 
+
+			if( user != 'AnonymousUser'){
+				document.getElementById('user-info').innerHTML = ''
+			}
+
+			if (shipping == 'False' && user != 'AnonymousUser'){
+					// hide entire form id use is logged id and shipping is false
+				document.getElementById('form-wrapper').classList.add('hidden');
+					// show payment id logged in user want to buy an item that does not required shipping
+				document.getElementById('payment-info').classList.remove("hidden");
+			}
+
+			var form = document.getElementById('form')
+			form.addEventListener('submit', function(e){
+				e.preventDefault()
+				console.log("form Submitted ..")
+				document.getElementById('form-button').classList.add("hidden");
+				
+				document.getElementById('payment-info').classList.remove("hidden");
+
+			})
+
+
+			document.getElementById('make-payment').addEventListener('click', function(e) {
+					submitFormData();
+			})
+
+			function submitFormData() {
+				console.log("Payment button clicked");
+			
+				let form = document.getElementById("payment-form");  // Ensure you have a form with this ID
+			
+				let userFormData = {
+					'name': null,
+					'email': null,
+					'total': total,  // Ensure 'total' is defined somewhere
+				};
+			
+				let shippingInfo = {
+					'address': null,
+					'city': null,
+					'state': null,
+					'zipcode': null
+				};
+			
+				if (shipping !== 'False') {
+					shippingInfo.address = form.address.value;
+					shippingInfo.city = form.city.value;
+					shippingInfo.state = form.state.value;
+					shippingInfo.zipcode = form.zipcode.value;
+				}
+			
+				if (user === 'AnonymousUser') {
+					userFormData.name = form.name.value;
+					userFormData.email = form.email.value;
+				}
+			
+				console.log('Shipping Info:', shippingInfo);
+				console.log('User Info:', userFormData);
+			
+				let url = '/process_order/';
+				
+				fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': csrftoken,  // Ensure csrftoken is defined
+					},
+					body: JSON.stringify({ 'form': userFormData, 'shipping': shippingInfo }),
+				})
+				.then(response => response.json())
+				.then(data => {
+					console.log('Success:', data);
+					alert('Transaction completed');
+			
+					// Redirect to store
+					window.location.href = "/store/";  // Ensure this URL is correct
+				})
+				.catch(error => console.error('Error:', error));
+			}
+			
+	</script>
 {% endblock content %}

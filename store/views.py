@@ -15,11 +15,11 @@ def store(request):
 	else:
 		#Create empty cart for now for non-logged in user
 		items = []
-		order = {'get_cart_total':0, 'get_cart_items':0}
+		order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
 		cartItems = order['get_cart_items']
 	
 	products = Product.objects.all()
-	context = {'products':products, 'cartItems':cartItems}
+	context = {'products':products, 'cartItems':cartItems,}
 	return render(request, 'store/store.html', context)
 
 def cart(request):
@@ -31,7 +31,7 @@ def cart(request):
 	else:
 		#Create empty cart for now for non-logged in user
 		items = []
-		order = {'get_cart_total':0, 'get_cart_items':0}
+		order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
 
 	context = {'items':items, 'order':order}
 	return render(request, 'store/cart.html', context)
@@ -47,7 +47,7 @@ def checkout(request):
 	else:
 		#Create empty cart for now for non-logged in user
 		items = []
-		order = {'get_cart_total':0, 'get_cart_items':0}
+		order = {'get_cart_total':0, 'get_cart_items':0, }
 
 	context = {'items':items, 'order':order}
 	return render(request, 'store/checkout.html', context)
@@ -77,3 +77,8 @@ def updateItem(request):
 		orderItem.delete()
 
 	return JsonResponse('Item was added', safe=False)
+
+def processOrder(request):
+	print("inside process")
+	print("data", request.body)
+	return JsonResponse('Payment complete', safe=False)
