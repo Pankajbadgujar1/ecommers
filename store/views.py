@@ -79,6 +79,11 @@ def updateItem(request):
 
 	return JsonResponse('Item was added', safe=False)
 
+
+
+#from django.views.decorators.csrf import csrf_exempt
+
+#@csrf_exempt
 def processOrder(request):
 	print("inside process")
 	print("data", request.body)
