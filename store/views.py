@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import *
 from .models import Order  # Ensure this import exists
+import datetime
 
 
 from  django.http import JsonResponse
@@ -81,4 +82,30 @@ def updateItem(request):
 def processOrder(request):
 	print("inside process")
 	print("data", request.body)
+
+	transation_id = datetime.datetime.now().timestamp()
+	data = json.loads(request.body)
+	if request.user.is_authenticated:
+		customer = request.user.customer
+
+		order, created = Order.objects.get_or_create(customer=customer, complete=False)
+		total = float(data['from']['total'])
+		order.transaction_id = transation_id
+
+		if total == order.get_cart_total:
+			order.complete = True
+		order.save()
+
+		if order.shipping == True:
+			ShippingAddress.objects.create(
+				customer= customer,
+				order= order,
+				address = data['shipping']['address'],
+				city = data['shipping']['city'],
+				state = data['shipping']['state'],
+				zipcode = data['shipping']['zipcode'],
+			)
+	else:
+		print("user is not logged in ..")
 	return JsonResponse('Payment complete', safe=False)
+
