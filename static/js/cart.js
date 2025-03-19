@@ -52,28 +52,28 @@ function addCookieItem(productId, action){
 
 	console.log("cart:",cart)
 	document.cookie = 'cart =' + JSON.stringify(cart) + ";domain=;path=/"
-	//location.reload()
+	location.reload()
 
+}
 
+function updateUserOrder(productId, action){
+	console.log('User is authenticated, sending data...')
 
-// function updateUserOrder(productId, action){
-// 	console.log('User is authenticated, sending data...')
+		var url = '/update_item/'
 
-// 		var url = '/update_item/'
-
-// 		fetch(url, {
-// 			method:'POST',
-// 			headers:{
-// 				'Content-Type':'application/json',
-//                 'X-CSRFToken': csrftoken,
-// 			}, 
-// 			body:JSON.stringify({'productId':productId, 'action':action})
-// 		})
-// 		.then((response) => {
-// 		   return response.json();
-// 		})
-// 		.then((data) => {
-// 		    console.log('data:',data)
-// 			location.reload()
-// 		});
+		fetch(url, {
+			method:'POST',
+			headers:{
+				'Content-Type':'application/json',
+                'X-CSRFToken': csrftoken,
+			}, 
+			body:JSON.stringify({'productId':productId, 'action':action})
+		})
+		.then((response) => {
+		   return response.json();
+		})
+		.then((data) => {
+		    console.log('data:',data)
+			location.reload()
+		});
 }
