@@ -1,4 +1,4 @@
-var updateBtns = document.getElementsByClassName('update-cart')
+var  updateBtns = document.getElementsByClassName('update-cart')
 
 for(var i = 0; i <updateBtns.length; i++){
 
@@ -11,6 +11,7 @@ for(var i = 0; i <updateBtns.length; i++){
         console.log('USER:', user)
 
         if(user ==='AnonymousUser'){
+			addCookieItem(productID, action)
             console.log('Not logged in')
 
         }else{
@@ -27,11 +28,14 @@ function addCookieItem(productId, action){
 	console.log("Not loogged in..")
 
 	console.log("user is not authenticated ")
+	console.log('action :...',action)
 	if (action == 'add'){
 		if(cart[productId] == undefined){
 			cart[productId]= {'quantity':1}
+			console.log(" inside if ")
 		}else{
 			cart[productId]['quantity'] += 1
+			console.log(" inside else ")
 		}
 		
 	}
@@ -46,10 +50,11 @@ function addCookieItem(productId, action){
 			delete cart[productId]
 
 		}
-		console.log("cart:",cart)
-		document.cookie = 'cart =' + JSON.stringify(cart) + ";domain=;path=/"
-		location.reload()
+		
 	}
+	console.log("cart:",cart)
+	document.cookie = 'cart =' + JSON.stringify(cart) + ";domain=;path=/"
+	//location.reload()
 }
 
 
